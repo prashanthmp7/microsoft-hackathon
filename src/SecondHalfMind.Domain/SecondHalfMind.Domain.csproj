@@ -1,0 +1,3 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Shared contracts only. No I/O, no third-party dependencies. -->
+</Project>

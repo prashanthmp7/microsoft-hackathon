@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\SecondHalfMind.Domain\SecondHalfMind.Domain.csproj" />
+  </ItemGroup>
+</Project>

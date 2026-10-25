@@ -1,0 +1,16 @@
+# Builds one agent service. Usage:
+#   docker build -f Dockerfile.agent --build-arg AGENT=Stats -t shm-agent-stats .
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG AGENT
+WORKDIR /src
+COPY . .
+RUN dotnet publish src/SecondHalfMind.AgentService.${AGENT}/SecondHalfMind.AgentService.${AGENT}.csproj -c Release -o /app
+
+FROM mcr.microsoft.com/dotnet/runtime:8.0 AS runtime
+ARG AGENT
+WORKDIR /app
+COPY --from=build /app .
+ENV DOTNET_RUNNING_IN_CONTAINER=true \
+	AGENT_DLL=SecondHalfMind.AgentService.${AGENT}.dll
+USER $APP_UID
+ENTRYPOINT ["sh", "-c", "exec dotnet $AGENT_DLL"]

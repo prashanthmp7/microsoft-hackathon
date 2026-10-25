@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+	Service Bus plumbing for running agents as separate services. Kept out of SecondHalfMind.Agents
+	so agent code still depends on Domain contracts only. Authentication is managed identity
+	(DefaultAzureCredential); Service Bus has local (key) auth disabled, so there are no secrets.
+  -->
+  <ItemGroup>
+	<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	<PackageReference Include="Azure.Identity" Version="1.13.2" />
+	<PackageReference Include="Azure.Messaging.ServiceBus" Version="7.18.4" />
+	<ProjectReference Include="..\SecondHalfMind.Agents\SecondHalfMind.Agents.csproj" />
+	<ProjectReference Include="..\SecondHalfMind.Domain\SecondHalfMind.Domain.csproj" />
+  </ItemGroup>
+</Project>

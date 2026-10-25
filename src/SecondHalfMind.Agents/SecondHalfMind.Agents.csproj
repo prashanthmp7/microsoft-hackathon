@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Agents depend on the Domain contracts ONLY. They have no project reference to the data layer,
+    so they cannot even name the stores that hold match data. Data reaches them through read-only
+    interfaces; their single output is the append-only IInsightSink.
+  -->
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="..\SecondHalfMind.Domain\SecondHalfMind.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="SecondHalfMind.Tests" />
+  </ItemGroup>
+</Project>

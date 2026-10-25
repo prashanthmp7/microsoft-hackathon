@@ -1,0 +1,49 @@
+// Microsoft Fabric Real-Time Intelligence: Eventhouse setup and analytics for Second Half Mind.
+//
+// Data path: app -> Azure Event Hubs (match-events, send-only identity)
+//            -> Fabric Eventstream (consumer group "fabric") -> Eventhouse table MatchEvents.
+// Run the management commands once in a KQL queryset attached to your Eventhouse.
+
+.create-merge table MatchEvents (
+    id: string, matchId: string, sequence: long, clockSeconds: int, type: string, team: string,
+    playerId: string, targetPlayerId: string, x: real, y: real, endX: real, endY: real,
+    success: bool, underPressure: bool, speedKmh: real, expectedGoals: real, onTarget: bool)
+
+.create-or-alter table MatchEvents ingestion json mapping "MatchEventsJson"
+'[{"column":"id","path":"$.id"},{"column":"matchId","path":"$.matchId"},{"column":"sequence","path":"$.sequence"},{"column":"clockSeconds","path":"$.clockSeconds"},{"column":"type","path":"$.type"},{"column":"team","path":"$.team"},{"column":"playerId","path":"$.playerId"},{"column":"targetPlayerId","path":"$.targetPlayerId"},{"column":"x","path":"$.x"},{"column":"y","path":"$.y"},{"column":"endX","path":"$.endX"},{"column":"endY","path":"$.endY"},{"column":"success","path":"$.success"},{"column":"underPressure","path":"$.underPressure"},{"column":"speedKmh","path":"$.speedKmh"},{"column":"expectedGoals","path":"$.expectedGoals"},{"column":"onTarget","path":"$.onTarget"}]'
+
+// Read-only analytics. Analysts get query access; nothing here writes back to the app.
+
+// 1. Control vs chaos in 5-minute windows (same definition the Stats agent uses).
+MatchEvents
+| where type in ("Pass", "PossessionChange")
+| extend window = clockSeconds / 300
+| summarize passesHome = countif(type == "Pass" and team == "Home"),
+            passesAway = countif(type == "Pass" and team == "Away"),
+            completedHome = countif(type == "Pass" and team == "Home" and success),
+            completedAway = countif(type == "Pass" and team == "Away" and success),
+            turnovers = countif(type == "PossessionChange")
+          by matchId, window
+| extend homePassShare = round(todouble(passesHome) / (passesHome + passesAway), 2),
+         turnoversPerMinute = round(turnovers / 5.0, 1),
+         chaos = round(100 * (0.7 * max_of(0.0, min_of(1.0, (turnovers / 5.0 - 2.0) / 3.0))), 0)
+| order by matchId asc, window asc
+
+// 2. Pressing intensity: share of pressure events per side, rolling 10 minutes.
+MatchEvents
+| where type == "Pressure"
+| summarize pressHome = countif(team == "Home"), pressAway = countif(team == "Away") by matchId, bin(clockSeconds, 600)
+| extend homePressShare = round(todouble(pressHome) / (pressHome + pressAway), 2)
+
+// 3. Fastest sprints and shots (threshold alerts across all synthetic matches).
+MatchEvents
+| where type in ("Sprint", "Shot") and isnotnull(speedKmh)
+| top 20 by speedKmh desc
+| project matchId, minute = clockSeconds / 60 + 1, type, team, playerId, speedKmh
+
+// 4. Shot quality: xG per shot by distance band.
+MatchEvents
+| where type == "Shot"
+| extend distance = sqrt(pow(iff(team == "Home", 105.0, 0.0) - x, 2) + pow(34.0 - y, 2))
+| summarize shots = count(), avgXg = round(avg(expectedGoals), 3), onTargetRate = round(avg(toint(onTarget)), 2) by band = bin(distance, 5)
+| order by band asc

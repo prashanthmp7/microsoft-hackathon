@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <UserSecretsId>second-half-mind-api</UserSecretsId>
+    <InvariantGlobalization>true</InvariantGlobalization>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SecondHalfMind.Domain\SecondHalfMind.Domain.csproj" />
+    <ProjectReference Include="..\SecondHalfMind.Simulation\SecondHalfMind.Simulation.csproj" />
+    <ProjectReference Include="..\SecondHalfMind.Data\SecondHalfMind.Data.csproj" />
+    <ProjectReference Include="..\SecondHalfMind.Agents\SecondHalfMind.Agents.csproj" />
+    <ProjectReference Include="..\SecondHalfMind.Agents.Hosting\SecondHalfMind.Agents.Hosting.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="SecondHalfMind.Tests" />
+  </ItemGroup>
+</Project>

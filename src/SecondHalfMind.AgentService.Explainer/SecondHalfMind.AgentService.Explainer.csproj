@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+  <!-- Hosts only the explainer agent. No reference to Data or Api: it sees nothing but its queue. -->
+  <ItemGroup>
+    <ProjectReference Include="..\SecondHalfMind.Agents.Hosting\SecondHalfMind.Agents.Hosting.csproj" />
+  </ItemGroup>
+</Project>

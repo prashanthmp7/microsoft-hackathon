@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Platform data layer: owns source data and its write paths. Agents must never reference this project. -->
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="..\SecondHalfMind.Domain\SecondHalfMind.Domain.csproj" />
+    <ProjectReference Include="..\SecondHalfMind.Simulation\SecondHalfMind.Simulation.csproj" />
+  </ItemGroup>
+</Project>

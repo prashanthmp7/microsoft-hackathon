@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <!-- xUnit analyzer suggestions should not break the build. -->
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="..\..\src\SecondHalfMind.Domain\SecondHalfMind.Domain.csproj" />
+    <ProjectReference Include="..\..\src\SecondHalfMind.Simulation\SecondHalfMind.Simulation.csproj" />
+    <ProjectReference Include="..\..\src\SecondHalfMind.Data\SecondHalfMind.Data.csproj" />
+    <ProjectReference Include="..\..\src\SecondHalfMind.Agents\SecondHalfMind.Agents.csproj" />
+    <ProjectReference Include="..\..\src\SecondHalfMind.Api\SecondHalfMind.Api.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\SecondHalfMind.Agents.Hosting\SecondHalfMind.Agents.Hosting.csproj" />
+  </ItemGroup>
+</Project>
