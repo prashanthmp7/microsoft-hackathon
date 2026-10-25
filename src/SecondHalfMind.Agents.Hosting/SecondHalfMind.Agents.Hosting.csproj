@@ -7,7 +7,7 @@
   <ItemGroup>
 	<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	<PackageReference Include="Azure.Identity" Version="1.13.2" />
-	<PackageReference Include="Azure.Messaging.ServiceBus" Version="7.18.4" />
+	<PackageReference Include="Azure.Messaging.ServiceBus" Version="7.21.0" />
 	<ProjectReference Include="..\SecondHalfMind.Agents\SecondHalfMind.Agents.csproj" />
 	<ProjectReference Include="..\SecondHalfMind.Domain\SecondHalfMind.Domain.csproj" />
   </ItemGroup>
