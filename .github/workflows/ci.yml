@@ -27,7 +27,7 @@ jobs:
       - name: Test (includes architecture tests for the read-only agent guarantee)
         run: dotnet test SecondHalfMind.sln --no-build -c Release --logger "trx;LogFileName=results.trx"
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 20
           cache: npm
